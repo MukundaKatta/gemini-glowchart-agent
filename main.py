@@ -47,12 +47,27 @@ def healthz() -> dict[str, str]:
 def post_ask(req: AskRequest) -> AskResponse:
     # Only attempt the live Vertex AI path if a project is wired up.
     use_llm = bool(os.getenv("GOOGLE_CLOUD_PROJECT"))
+    image_b64 = req.image_b64 or DEMO_IMAGE_B64
+    # If the caller sent the stub sentinel (the canned demo path), force
+    # stub mode for this request even when GLOWCHART_STUB=0 is on the
+    # service. The real Perfect Corp API would 400 on the fake bytes.
+    prev_stub = os.environ.get("GLOWCHART_STUB")
+    if image_b64 == DEMO_IMAGE_B64:
+        os.environ["GLOWCHART_STUB"] = "1"
     try:
-        result = ask(req.image_b64 or DEMO_IMAGE_B64, use_llm=use_llm)
-        text = result.final_text or ""
-    except Exception:
-        # Fall back to the deterministic local renderer if Vertex AI fails.
-        text = ask(req.image_b64 or DEMO_IMAGE_B64, use_llm=False).final_text
+        try:
+            result = ask(image_b64, use_llm=use_llm)
+            text = result.final_text or ""
+        except Exception:
+            # Real-mode failures (bad image, face-detection reject, etc.)
+            # fall back to the canned stub demo so the URL stays demo-able.
+            os.environ["GLOWCHART_STUB"] = "1"
+            text = ask(DEMO_IMAGE_B64, use_llm=False).final_text
+    finally:
+        if prev_stub is None:
+            os.environ.pop("GLOWCHART_STUB", None)
+        else:
+            os.environ["GLOWCHART_STUB"] = prev_stub
     return AskResponse(answer=text)
 
 
