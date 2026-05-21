@@ -10,5 +10,9 @@ build/
 .pytest_cache/
 .ruff_cache/
 .DS_Store
-.video-build/
+.video-build/*
+!.video-build/build.sh
+!.video-build/render_title.py
+!.video-build/render_terminal.py
+!.video-build/render_browser.py
 *.log
