@@ -47,6 +47,9 @@ Upload a selfie (the canned one is a placeholder). The agent:
 6. Triggers `apply_makeup` and `apply_hair_color`.
 7. Renders the five sections with verbatim citations.
 
+**Live demo:** https://gemini-glowchart-agent-1029931682737.us-central1.run.app
+**Repo:** https://github.com/MukundaKatta/gemini-glowchart-agent
+
 ## Quickstart (stub mode, zero cloud setup)
 
 ```sh
