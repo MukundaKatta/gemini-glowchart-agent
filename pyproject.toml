@@ -1,0 +1,31 @@
+[project]
+name = "gemini-glowchart-agent"
+version = "0.1.0"
+description = "Gemini 2.5 Flash ADK agent that reads Perfect Corp YouCam skin + skin-tone analysis and picks a makeup look + hair color, then triggers virtual try-on."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Mukunda Katta" }]
+requires-python = ">=3.10"
+dependencies = [
+    "google-adk>=2.0.0",
+    "requests>=2.31",
+    "pillow>=10",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/MukundaKatta/gemini-glowchart-agent"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
